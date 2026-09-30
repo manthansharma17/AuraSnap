@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* ---- Pastel palette: change the theme here, in one place ---- */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-mint: #f4faf8;        /* page background */
+  --color-line: #e3efec;        /* borders */
+  --color-ink: #1f2937;         /* headings, body text */
+  --color-slate: #5b6673;       /* secondary text */
+  --color-brand: #7ccfc4;       /* buttons, active states */
+  --color-brand-deep: #2e9488;  /* links, icons, accent text */
+  --color-brand-ink: #1f6f65;   /* small accent text on tinted backgrounds */
+  --color-ok: #8edcb0;
+  --color-warn: #f8e08e;
+  --color-bad: #f4a3a3;
+  --color-bad-ink: #b42323;
+}
+
+html, body, #root { min-height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-mint);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible { outline: 2px solid var(--color-brand-deep); outline-offset: 2px; }
+
+/* ---- Animations ---- */
+
+/* One orchestrated page-load sequence: items rise in one after another */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.rise { opacity: 0; animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Slow drifting background glow */
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(30px, -24px) scale(1.08); }
+}
+.blob { animation: drift 14s ease-in-out infinite; }
+
+/* Logo droplet: gentle breathing */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+.breathe { animation: breathe 3.2s ease-in-out infinite; }
+
+/* Wrong-input feedback */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.shake { animation: shake 0.4s; }
+
+/* Form fields swap when switching Sign in / Create account */
+@keyframes swap {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.swap { animation: swap 0.3s ease-out; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.8s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .blob, .breathe, .shake, .swap, .spin { animation: none; opacity: 1; }
+  * { transition-duration: 0.01ms !important; }
+}

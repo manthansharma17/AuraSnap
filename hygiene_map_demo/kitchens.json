@@ -1,0 +1,260 @@
+[
+  {
+    "name": "Hotel Grand Meridian",
+    "lat": 22.7196,
+    "lng": 75.8577,
+    "score": 35,
+    "issues": [
+      "food_debris_on_surface",
+      "dirty_dishes",
+      "clutter"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Spice Route Restaurant",
+    "lat": 22.728,
+    "lng": 75.865,
+    "score": 15,
+    "issues": [
+      "sink_contamination",
+      "cluttered_workstation",
+      "waste_on_floor"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Riverside Kitchen & Bar",
+    "lat": 22.71,
+    "lng": 75.845,
+    "score": 55,
+    "issues": [
+      "surface_debris",
+      "raw_egg_shells"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "The Copper Ladle",
+    "lat": 22.734,
+    "lng": 75.839,
+    "score": 0,
+    "issues": [
+      "pest_infestation",
+      "dirty_dishes",
+      "surface_grime"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Old Town Diner",
+    "lat": 22.705,
+    "lng": 75.87,
+    "score": 35,
+    "issues": [
+      "excessive_clutter",
+      "dirty_dishes",
+      "unorganized_storage"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Green Leaf Cafe",
+    "lat": 22.722,
+    "lng": 75.83,
+    "score": 25,
+    "issues": [
+      "dirty_cookware",
+      "surface_debris",
+      "clutter"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Hotel Grand Meridian",
+    "lat": 22.7196,
+    "lng": 75.8577,
+    "score": 5,
+    "issues": [
+      "heavy_grease_buildup",
+      "dirty_surfaces",
+      "unclean_cooking_equipment",
+      "clutter",
+      "structural_damage"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Spice Route Restaurant",
+    "lat": 22.728,
+    "lng": 75.865,
+    "score": 15,
+    "issues": [
+      "surface_grime",
+      "clutter",
+      "floor_debris",
+      "surface_grime"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Riverside Kitchen & Bar",
+    "lat": 22.71,
+    "lng": 75.845,
+    "score": 5,
+    "issues": [
+      "floor_contamination",
+      "appliance_grime"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "The Copper Ladle",
+    "lat": 22.734,
+    "lng": 75.839,
+    "score": 35,
+    "issues": [
+      "food_debris_on_surface",
+      "unattended_flame",
+      "cluttered_workspace",
+      "dirty_kitchen_towel"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Old Town Diner",
+    "lat": 22.705,
+    "lng": 75.87,
+    "score": 35,
+    "issues": [
+      "food_debris_on_surfaces",
+      "clutter",
+      "unattended_sharp_objects",
+      "dirty_dishes",
+      "improper_waste_management"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Green Leaf Cafe",
+    "lat": 22.722,
+    "lng": 75.83,
+    "score": 25,
+    "issues": [
+      "child_on_countertop",
+      "unattended_cooking",
+      "cluttered_workstation",
+      "food_debris_on_stove",
+      "lack_of_ppe"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Hotel Grand Meridian",
+    "lat": 22.7196,
+    "lng": 75.8577,
+    "score": 45,
+    "issues": [
+      "heavy_grease_buildup",
+      "food_debris"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Spice Route Restaurant",
+    "lat": 22.728,
+    "lng": 75.865,
+    "score": 30,
+    "issues": [
+      "liquid_spill"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Riverside Kitchen & Bar",
+    "lat": 22.71,
+    "lng": 75.845,
+    "score": 15,
+    "issues": [
+      "soiled_clothing",
+      "surface_contamination",
+      "floor_contamination",
+      "improper_waste_management",
+      "unhygienic_cleaning_cloth",
+      "clutter"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "The Copper Ladle",
+    "lat": 22.734,
+    "lng": 75.839,
+    "score": 55,
+    "issues": [
+      "no_gloves",
+      "food_debris_on_surface",
+      "cluttered_workstation"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Old Town Diner",
+    "lat": 22.705,
+    "lng": 75.87,
+    "score": 10,
+    "issues": [
+      "major_spill",
+      "improper_footwear",
+      "lack_of_ppe",
+      "unattended_cooking_equipment"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Green Leaf Cafe",
+    "lat": 22.722,
+    "lng": 75.83,
+    "score": 45,
+    "issues": [
+      "cluttered_workstation",
+      "dirty_dishes_in_sink",
+      "food_residue_on_surfaces"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Hotel Grand Meridian",
+    "lat": 22.7196,
+    "lng": 75.8577,
+    "score": 35,
+    "issues": [
+      "clutter",
+      "improper_storage",
+      "unhygienic_surface"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Spice Route Restaurant",
+    "lat": 22.728,
+    "lng": 75.865,
+    "score": 45,
+    "issues": [
+      "food_debris_on_floor",
+      "cluttered_countertop",
+      "uncovered_food"
+    ],
+    "lastChecked": "Just now"
+  },
+  {
+    "name": "Riverside Kitchen & Bar",
+    "lat": 22.71,
+    "lng": 75.845,
+    "score": 45,
+    "issues": [
+      "clutter_on_floor",
+      "cluttered_countertop"
+    ],
+    "lastChecked": "Just now"
+  }
+]

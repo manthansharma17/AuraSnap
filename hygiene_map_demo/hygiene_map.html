@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitchen Aura Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root {
+    --ink: #1c2b28;
+    --paper: #f6f3ec;
+    --safe: #2f7a4f;
+    --caution: #b8863b;
+    --unsafe: #a13d3d;
+    --line: #d8d2c2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 1.3rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  h1 span { color: var(--safe); }
+  #searchBox {
+    position: relative;
+    width: min(320px, 60vw);
+  }
+  #searchInput {
+    width: 100%;
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background: #fff;
+  }
+  #searchInput:focus { outline: 2px solid var(--safe); outline-offset: 1px; }
+  #suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1000;
+    display: none;
+  }
+  #suggestions div {
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  #suggestions div:last-child { border-bottom: none; }
+  #suggestions div:hover { background: #f0ede3; }
+  #map { height: calc(100vh - 66px); width: 100%; }
+  .legend {
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+  .dot.safe { background: var(--safe); }
+  .dot.caution { background: var(--caution); }
+  .dot.unsafe { background: var(--unsafe); }
+
+  .score-popup { font-family: 'Georgia', serif; min-width: 220px; }
+  .score-popup h3 { margin: 0 0 4px; font-size: 1.02rem; }
+  .score-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: #fff;
+    font-weight: 600;
+    margin: 4px 0 8px;
+  }
+  .score-popup .metric { display:flex; justify-content:space-between; font-size:0.85rem; margin:2px 0; }
+  .score-popup .issues { margin-top: 8px; font-size: 0.82rem; color: #555; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kitchen <span>Aura</span> Map</h1>
+  <div id="searchBox">
+    <input id="searchInput" type="text" placeholder="Search a hotel or restaurant name..." autocomplete="off" />
+    <div id="suggestions"></div>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  // ---------------------------------------------------------------------
+  // FALLBACK DEMO DATA — used only if kitchens.json can't be loaded
+  // (e.g. you're opening this file directly without a local server).
+  // ---------------------------------------------------------------------
+  const FALLBACK_KITCHENS = [
+    { name: "Hotel Grand Meridian", lat: 22.7196, lng: 75.8577, score: 91, issues: [], lastChecked: "2 hours ago" },
+    { name: "Spice Route Restaurant", lat: 22.7280, lng: 75.8650, score: 78, issues: ["cluttered_counter"], lastChecked: "35 minutes ago" },
+  ];
+
+  // Loads kitchens.json (produced by export_kitchens_json in Colab) and
+  // builds the map once the real data arrives. Falls back to demo data
+  // if the fetch fails, so the map still renders something either way.
+  async function loadKitchens() {
+    try {
+      const response = await fetch('kitchens.json');
+      if (!response.ok) throw new Error('kitchens.json not found');
+      const data = await response.json();
+      console.log(`Loaded ${data.length} kitchens from kitchens.json`);
+      return data;
+    } catch (err) {
+      console.warn('Could not load kitchens.json, using fallback demo data.', err);
+      return FALLBACK_KITCHENS;
+    }
+  }
+
+  function ratingOf(score) {
+    if (score >= 75) return { label: "Safe to dine", color: "#2f7a4f", key: "safe" };
+    if (score >= 50) return { label: "Caution advised", color: "#b8863b", key: "caution" };
+    return { label: "Not recommended", color: "#a13d3d", key: "unsafe" };
+  }
+
+  const map = L.map('map', { zoomControl: true }).setView([22.7196, 75.8577], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(map);
+
+  const legend = L.control({ position: 'bottomleft' });
+  legend.onAdd = function() {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = `
+      <div><span class="dot safe"></span>Safe (75-100)</div>
+      <div><span class="dot caution"></span>Caution (50-74)</div>
+      <div><span class="dot unsafe"></span>Not recommended (0-49)</div>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+
+  const markerByName = {};
+  let kitchens = [];
+
+  // Everything that depends on the data now lives inside this async
+  // function, which waits for loadKitchens() to finish before building
+  // any markers or wiring up search.
+  async function initMap() {
+    kitchens = await loadKitchens();
+
+    kitchens.forEach(k => {
+      const rating = ratingOf(k.score);
+      const marker = L.circleMarker([k.lat, k.lng], {
+        radius: 10,
+        fillColor: rating.color,
+        color: '#fff',
+        weight: 2,
+        fillOpacity: 0.9,
+      }).addTo(map);
+
+      const issuesHtml = k.issues.length
+        ? `<div class="issues">Flagged: ${k.issues.join(', ').replace(/_/g, ' ')}</div>`
+        : `<div class="issues">No issues flagged in latest check.</div>`;
+
+      marker.bindPopup(`
+        <div class="score-popup">
+          <h3>${k.name}</h3>
+          <span class="score-badge" style="background:${rating.color}">${rating.label}</span>
+          <div class="metric"><span>Hygiene score</span><strong>${k.score}/100</strong></div>
+          <div class="metric"><span>Last checked</span><span>${k.lastChecked}</span></div>
+          ${issuesHtml}
+        </div>
+      `);
+
+      markerByName[k.name.toLowerCase()] = { marker, data: k };
+    });
+  }
+
+  initMap();
+
+  // --- Search / tooltip lookup ---
+  const input = document.getElementById('searchInput');
+  const suggestions = document.getElementById('suggestions');
+
+  function renderSuggestions(query) {
+    const q = query.trim().toLowerCase();
+    suggestions.innerHTML = '';
+    if (!q) { suggestions.style.display = 'none'; return; }
+
+    const matches = kitchens.filter(k => k.name.toLowerCase().includes(q));
+    if (!matches.length) { suggestions.style.display = 'none'; return; }
+
+    matches.forEach(k => {
+      const item = document.createElement('div');
+      item.textContent = k.name;
+      item.onclick = () => selectKitchen(k.name);
+      suggestions.appendChild(item);
+    });
+    suggestions.style.display = 'block';
+  }
+
+  function selectKitchen(name) {
+    const entry = markerByName[name.toLowerCase()];
+    if (!entry) return;
+    map.setView([entry.data.lat, entry.data.lng], 16, { animate: true });
+    entry.marker.openPopup();
+    input.value = name;
+    suggestions.style.display = 'none';
+  }
+
+  input.addEventListener('input', e => renderSuggestions(e.target.value));
+  document.addEventListener('click', e => {
+    if (!document.getElementById('searchBox').contains(e.target)) {
+      suggestions.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
